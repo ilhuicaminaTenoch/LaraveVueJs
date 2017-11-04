@@ -5,7 +5,7 @@
             <h1 class="page-header">Codigos Postales</h1>
         </div>
         <div class="col-md-7">
-            <a href="#" class="btn btn-primary pull-right">Nuevo codigo postal</a>
+            <a href="#" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create">Nuevo codigo postal</a>
 
             <table class="table table-hover table-striped">
                 <thead>
@@ -26,6 +26,7 @@
                 </tr>
                 </tbody>
             </table>
+            @include('crud.create')
         </div>
         <div class="col-md-5">
             <pre>

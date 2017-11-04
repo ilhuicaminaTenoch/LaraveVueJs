@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CodigosPostales;
+use Illuminate\Http\Request;
 
 class CrudController extends Controller
 {
@@ -29,25 +30,24 @@ class CrudController extends Controller
         return $codigosPostales;
     }
 
-    /**
-     *
-     */
-    public function create(){
-        //formulario
-    }
 
-    public function store(){
+
+    public function store(Request $request){
         //guardar
-    }
-
-    /**
-     * @param $idCodigoPostal
-     * @return mixed
-     */
-    public function edit($idCodigoPostal){
-        $cp = CodigosPostales::findOrFail($idCodigoPostal);
-        //formulario
-        return $cp;
+        $this->validate($request, [
+            'id_estado' => 'required',
+            'estado' => 'required',
+            'estado' => 'required',
+            'id_municipio' => 'required',
+            'municipio' => 'required',
+            'ciudad' => 'required',
+            'zona' => 'required',
+            'codigo_postal' => 'required',
+            'asentamiento' => 'required',
+            'tipo' => 'required'
+        ]);
+        CodigosPostales::created($request->all());//guarda los datos declarados en el modelo
+        return;
     }
 
     /**

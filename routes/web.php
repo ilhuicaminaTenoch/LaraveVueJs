@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 
 Route::resource('images', 'ImagesController');
-Route::resource('crud', 'CrudController');
+Route::resource('crud', 'CrudController', ['except' => 'show', 'create', 'edit']);
 //Route::get('/crud', 'CrudController@delete')->name('delete');
 Route::get('/dashboard', 'CrudController@dashboard')->name('dashboard');
 
