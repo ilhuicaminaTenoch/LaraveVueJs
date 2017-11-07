@@ -7,16 +7,29 @@ use Illuminate\Http\Request;
 
 class CrudController extends Controller
 {
-    public function index(){
-       $cp = CodigosPostales::get();
-       //return view('crud.index', compact('cp'));
-        return $cp;
+    public function index(Request $request)
+    {
+        //$cp = CodigosPostales::orderBy('id_codigo_postal', 'DESC')->get(); //sin paginado
+        $cp = CodigosPostales::latest()->paginate(2); //paginado
+        //return view('crud.index', compact('cp'));
+        return [
+            'pagination' => [
+                'total' => $cp->total(),
+                'current_page' => $cp->currentPage(),
+                'per_page' => $cp->perPage(),
+                'last_page' => $cp->lastPage(),
+                'from' => $cp->firstItem(),
+                'to' => $cp->lastPage()
+            ],
+            'codigosPostales' => $cp
+        ];
     }
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function dashboard(){
+    public function dashboard()
+    {
         return view('crud.dashboard');
     }
 
@@ -24,19 +37,19 @@ class CrudController extends Controller
      * @param $codigoPostal
      * @return mixed
      */
-    public function buscaCodigoPostal($codigoPostal){
+    public function buscaCodigoPostal($codigoPostal)
+    {
         $codigosPostales = CodigosPostales::findOrFail($codigoPostal);
 
         return $codigosPostales;
     }
 
 
-
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         //guardar
         $this->validate($request, [
             'id_estado' => 'required',
-            'estado' => 'required',
             'estado' => 'required',
             'id_municipio' => 'required',
             'municipio' => 'required',
@@ -46,7 +59,8 @@ class CrudController extends Controller
             'asentamiento' => 'required',
             'tipo' => 'required'
         ]);
-        CodigosPostales::created($request->all());//guarda los datos declarados en el modelo
+        CodigosPostales::create($request->all());//guarda los datos declarados en el modelo
+
         return;
     }
 
@@ -54,8 +68,28 @@ class CrudController extends Controller
      * @param $idCodigoPostal
      * @return mixed
      */
-    public function destroy($idCodigoPostal){
+    public function destroy($idCodigoPostal)
+    {
         return CodigosPostales::where('id_codigo_postal', '=', $idCodigoPostal)->delete();
+
+    }
+
+    public function update(Request $request, $idCodigoPostal)
+    {
+        $this->validate($request, [
+            'id_estado' => 'required',
+            'estado' => 'required',
+            'id_municipio' => 'required',
+            'municipio' => 'required',
+            'ciudad' => 'required',
+            'zona' => 'required',
+            'codigo_postal' => 'required',
+            'asentamiento' => 'required',
+            'tipo' => 'required'
+        ]);
+        CodigosPostales::where('id_codigo_postal', '=', $idCodigoPostal)->update($request->all());
+
+        return;
 
     }
 

@@ -16697,28 +16697,6 @@ if (typeof jQuery === 'undefined') {
  * dependencies. Then, we will be ready to develop a robust and powerful
  * application frontend using useful Laravel and JavaScript libraries.
  */
-
-//require('./bootstrap');
-
-/*var urlUsers = 'https://jsonplaceholder.typicode.com/users';
-
-new Vue({
-    el: '#main',
-    created: function () {
-        this.getUsers();
-    },
-    data: {
-        list: []
-    },
-    methods: {
-        getUsers: function () {
-            axios.get(urlUsers).then(response => {
-                this.list = response.data;
-            });
-        }
-    }
-});*/
-
 new Vue({
     el: '#codigoPostal',
     created: function () {
@@ -16726,67 +16704,153 @@ new Vue({
     },
     data: {
         codigosPostales: [],
-        nuevoIdEstado: '',
-        nuevoEstado: '',
-        nuevoIdMunicipio: '',
-        nuevoMunicipio: '',
-        nuevoCiudad: '',
-        nuevoZona: '',
-        nuevoCodigoPostal: '',
-        nuevoAsentamiento: '',
-        nuevoTipo: '',
+        fillCodigoPostal:{
+            'id_codigo_postal': '',
+            'id_estado': '',
+            'estado': '',
+            'id_municipio': '',
+            'municipio': '',
+            'ciudad': '',
+            'zona': '',
+            'codigo_postal': '',
+            'asentamiento': '',
+            'tipo': ''
+        },
+        pagination : {
+            'total': 0,
+            'current_page': 0,
+            'per_page': 0,
+            'last_page': 0,
+            'from': 0,
+            'to': 0
+        },
+        id_estado: '',
+        estado: '',
+        id_municipio: '',
+        municipio: '',
+        ciudad: '',
+        zona: '',
+        codigo_postal: '',
+        asentamiento: '',
+        tipo: '',
         errors: []
     },
+    computed:{
+        isActived:function () {
+            this.pagination.current_page;
+
+
+        },
+        pagesNumber:function () {
+            if (!this.pagination.to){
+                return [];
+            }
+            var from = this.pagination.current_page - 2; //TODO offest
+            if (from < 1){
+                from = 1;
+            }
+            var to = from +(2 * 2);//TODO
+            if (to >= this.pagination.last_page){
+                to = this.pagination.last_page;
+            }
+            var pagesArray =[];
+            while (from <= to){
+                pagesArray.push(from);
+                from++;
+            }
+            return pagesArray;
+        }
+
+    },
     methods: {
-        getCodigosPostales: function () {
-            var urlCodigosPostales = 'crud';
+        getCodigosPostales: function (pagina) {
+            var urlCodigosPostales = 'crud?pagina='+pagina;
             axios.get(urlCodigosPostales).then(response => {
-                this.codigosPostales = response.data;
-        })
-            ;
+                this.codigosPostales = response.data.codigosPostales.data,
+                this.pagination = response.data.pagination;
+            });
+        },
+        editaCodigosPostales:function (codigoPostal) {
+            this.fillCodigoPostal.id_codigo_postal = codigoPostal.id_codigo_postal;
+            this.fillCodigoPostal.id_estado = codigoPostal.id_estado;
+            this.fillCodigoPostal.estado = codigoPostal.estado;
+            this.fillCodigoPostal.id_municipio = codigoPostal.id_municipio;
+            this.fillCodigoPostal.municipio = codigoPostal.municipio;
+            this.fillCodigoPostal.ciudad = codigoPostal.ciudad;
+            this.fillCodigoPostal.zona = codigoPostal.zona;
+            this.fillCodigoPostal.codigo_postal = codigoPostal.codigo_postal;
+            this.fillCodigoPostal.asentamiento = codigoPostal.asentamiento;
+            this.fillCodigoPostal.tipo = codigoPostal.tipo;
+            $('#edit').modal('show');
+
+        },
+        actualizarCodigoPostal:function (idCodigoPostal) {
+            var url = 'crud/'+idCodigoPostal;
+            axios.put(url, this.fillCodigoPostal).then(response => {
+               this.getCodigosPostales();
+                this.fillCodigoPostal = {
+                    'id_codigo_postal': '',
+                    'id_estado': '',
+                    'estado': '',
+                    'id_municipio': '',
+                    'municipio': '',
+                    'ciudad': '',
+                    'zona': '',
+                    'codigo_postal': '',
+                    'asentamiento': '',
+                    'tipo': ''
+                };
+                this.errors = [];
+                $('#edit').modal('hide');
+                toastr.success('Codigo postal actualizado con exito');
+            }).catch(error => {
+                this.errors = error.response.data;
+            });
+
+
         },
         eliminaCodigoPostal: function (codigoPostal) {
             var url = 'crud/' + codigoPostal.id_codigo_postal;
-            axios.delete(url).then(response => {
+                axios.delete(url).then(response => {
                 this.getCodigosPostales();
-            toastr.success('Eliminado Correctamente');
-
-        })
-            ;
+                toastr.success('Eliminado Correctamente');
+            });
         },
         crearCodigoPostal: function () {
             var url = 'crud';
             axios.post(url, {
-                id_estado: this.nuevoIdEstado,
-                estado: this.nuevoEstado,
-                id_municipio: this.nuevoIdMunicipio,
-                municipio: this.nuevoMunicipio,
-                ciudad: this.nuevoCiudad,
-                zona: this.nuevoZona,
-                codigo_postal: this.nuevoCodigoPostal,
-                asentamiento: this.nuevoAsentamiento,
-                tipo: this.nuevoTipo
+                id_estado: this.id_estado,
+                estado: this.estado,
+                id_municipio: this.id_municipio,
+                municipio: this.municipio,
+                ciudad: this.ciudad,
+                zona: this.zona,
+                codigo_postal: this.codigo_postal,
+                asentamiento: this.asentamiento,
+                tipo: this.tipo
 
 
             }).then(response => {
                 this.getCodigosPostales();
-                this.nuevoIdEstado = '';
-                this.nuevoEstado = '';
-                this.nuevoIdMunicipio = '';
-                this.nuevoMunicipio = '';
-                this.nuevoCiudad = '';
-                this.nuevoZona = '';
-                this.nuevoCodigoPostal = '';
-                this.nuevoAsentamiento = '';
-                this.nuevoTipo = '';
+                this.id_estado = '';
+                this.estado = '';
+                this.id_municipio = '';
+                this.municipio = '';
+                this.ciudad = '';
+                this.zona = '';
+                this.codigo_postal = '';
+                this.asentamiento = '';
+                this.tipo = '';
                 this.errors = [];
-            $('#create').modal('hide');
+                $('#create').modal('hide');
             toastr.success('Nuevo codigo postal creado con éxito');
-        }).
-            catch(error => {
+            }).catch(error => {
                 this.errors = error.response.data;
-        })
-            ;
+            });
+        },
+        cambioDePagina:function (pagina) {
+            this.pagination.current_page = pagina;
+            this.getCodigosPostales(pagina);
         }
     }
 });
