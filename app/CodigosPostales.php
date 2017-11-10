@@ -17,5 +17,8 @@ class CodigosPostales extends Model
         'codigo_postal',
         'asentamiento',
         'tipo'
-        ];
+    ];
+
+    protected $table = 'codigos_postales';
+
 }

@@ -1,4 +1,10 @@
 <div class="input-group">
-    <span class="input-group-addon" id="basic-addon1">C.P.</span>
-    <input type="text" class="form-control" placeholder="Codigo Postal" aria-describedby="basic-addon1">
+    <input type="text" class="form-control" placeholder="Codigo postal" v-model="txtCodigoPostal">
+    <span class="input-group-btn">
+        <button class="btn btn-secundary" type="submit" v-on:click="buscaCodigoPostal()">Buscar</button>
+    </span>
 </div>
+
+
+
+

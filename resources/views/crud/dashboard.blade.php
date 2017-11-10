@@ -26,6 +26,7 @@
                 </tr>
                 </tbody>
             </table>
+            @include('crud.paginacion')
             @include('crud.create')
             @include('crud.edit')
         </div>

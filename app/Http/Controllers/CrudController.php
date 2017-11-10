@@ -19,7 +19,7 @@ class CrudController extends Controller
                 'per_page' => $cp->perPage(),
                 'last_page' => $cp->lastPage(),
                 'from' => $cp->firstItem(),
-                'to' => $cp->lastPage()
+                'to' => $cp->last()
             ],
             'codigosPostales' => $cp
         ];
@@ -33,15 +33,27 @@ class CrudController extends Controller
         return view('crud.dashboard');
     }
 
+    public function codigoPostal()
+    {
+        return view('crud.codigo-postal');
+    }
+
     /**
      * @param $codigoPostal
      * @return mixed
      */
-    public function buscaCodigoPostal($codigoPostal)
+    public function buscaCodigoPostal(Request $request)
     {
-        $codigosPostales = CodigosPostales::findOrFail($codigoPostal);
+        $txtCodigoPostal = $request->input('codigoPostal');
 
-        return $codigosPostales;
+        $codigosPostales = CodigosPostales::where('codigo_postal', '=', $txtCodigoPostal)->get();
+
+
+        return [
+            'codigosPostales' => $codigosPostales
+        ];
+
+
     }
 
 

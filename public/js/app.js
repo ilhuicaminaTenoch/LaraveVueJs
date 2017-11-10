@@ -16733,11 +16733,12 @@ new Vue({
         codigo_postal: '',
         asentamiento: '',
         tipo: '',
-        errors: []
+        errors: [],
+        compensacion: 3
     },
     computed:{
         isActived:function () {
-            this.pagination.current_page;
+            return this.pagination.current_page;
 
 
         },
@@ -16745,11 +16746,11 @@ new Vue({
             if (!this.pagination.to){
                 return [];
             }
-            var from = this.pagination.current_page - 2; //TODO offest
+            var from = this.pagination.current_page - this.compensacion;
             if (from < 1){
                 from = 1;
             }
-            var to = from +(2 * 2);//TODO
+            var to = from +(this.compensacion * 2);
             if (to >= this.pagination.last_page){
                 to = this.pagination.last_page;
             }
@@ -16763,8 +16764,8 @@ new Vue({
 
     },
     methods: {
-        getCodigosPostales: function (pagina) {
-            var urlCodigosPostales = 'crud?pagina='+pagina;
+        getCodigosPostales: function (page) {
+            var urlCodigosPostales = 'crud?page='+page;
             axios.get(urlCodigosPostales).then(response => {
                 this.codigosPostales = response.data.codigosPostales.data,
                 this.pagination = response.data.pagination;
@@ -16856,3 +16857,34 @@ new Vue({
 });
 
 
+
+new Vue({
+    el: '#contenedor-codigo-postal',
+    data:{
+        txtCodigoPostal: '',
+        codigosPostales : [],
+        auxCodigosPostales :'',
+        errores: [],
+    },
+    methods:{
+        buscaCodigoPostal:function () {
+            var url = 'codigo-postal/buscar';
+
+            axios.post(url, {
+                codigoPostal: this.txtCodigoPostal
+            }).then(response => {
+                this.codigosPostales = response.data.codigosPostales;
+                this.agrupaCodigosPostales();
+
+            });
+        },
+        agrupaCodigosPostales: function () {
+            var longitud = this.codigosPostales.length;
+            var datos = this.codigosPostales;
+            var hash = {};
+            if ( longitud > 1 ){
+               this.auxCodigosPostales = datos[1];
+            }
+        }
+    }
+});

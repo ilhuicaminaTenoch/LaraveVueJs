@@ -20,6 +20,8 @@ Route::resource('images', 'ImagesController');
 Route::resource('crud', 'CrudController', ['except' => 'show', 'create', 'edit']);
 //Route::get('/crud', 'CrudController@delete')->name('delete');
 Route::get('/dashboard', 'CrudController@dashboard')->name('dashboard');
+Route::get('/codigo-postal', 'CrudController@codigoPostal')->name('codigo-postal');
+Route::post('/codigo-postal/buscar', 'CrudController@buscaCodigoPostal')->name('busca-codigo-postal');
 
 Auth::routes();
 
