@@ -23,7 +23,7 @@
                 <div class="form-group">
                     <label for="disabledTextInput">Colonia</label>
                     <select class="form-control">
-                        <option v-for="colonias in codigosPostales" :value="colonias.id_codigo_postal">
+                        <option v-for="colonias in colonias" :value="colonias.id_codigo_postal">
                             @{{ colonias.asentamiento }}
                         </option>
                     </select>

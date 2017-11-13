@@ -2,7 +2,7 @@ new Vue({
     el: '#contenedor-codigo-postal',
     data:{
         txtCodigoPostal: '',
-        codigosPostales : [],
+        colonias : [],
         auxCodigosPostales :'',
         errores: [],
     },
@@ -13,18 +13,16 @@ new Vue({
             axios.post(url, {
                 codigoPostal: this.txtCodigoPostal
             }).then(response => {
-                this.codigosPostales = response.data.codigosPostales;
+                this.colonias = response.data;
                 this.agrupaCodigosPostales();
 
             });
         },
         agrupaCodigosPostales: function () {
-            var longitud = this.codigosPostales.length;
-            var datos = this.codigosPostales;
-            var hash = {};
-            if ( longitud > 1 ){
-               this.auxCodigosPostales = datos[1];
-            }
+            var longitud = this.colonias.length;
+            var datos = this.colonias;
+            this.auxCodigosPostales = datos[0];
+
         }
     }
 });

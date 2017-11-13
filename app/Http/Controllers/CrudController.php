@@ -49,9 +49,8 @@ class CrudController extends Controller
         $codigosPostales = CodigosPostales::where('codigo_postal', '=', $txtCodigoPostal)->get();
 
 
-        return [
-            'codigosPostales' => $codigosPostales
-        ];
+        return $codigosPostales;
+
 
 
     }
